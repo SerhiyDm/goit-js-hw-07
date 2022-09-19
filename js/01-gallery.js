@@ -14,24 +14,28 @@ function createItemGalleryMarkup(items) {
     class="gallery__image"></a></div>`).join('');
     }
 
-    galleryList.innerHTML = listItemsGallery;
+    galleryList.insertAdjacentHTML('afterbegin', listItemsGallery);
 
 galleryList.addEventListener('click', showModal);
 
   
 function showModal (e) {
+ if (e.target.nodeName === 'IMG') {
         e.preventDefault();
-        const instance = basicLightbox.create(
-          `<img src="${e.target.dataset.source}" width="1280">`
-          );
-          instance.show(() => {
-            window.addEventListener('keydown', keyPress);
-                  });
-                  function keyPress (e) {
-                      if(e.code === 'Escape') {
-                        instance.close();
-                        window.removeEventListener('keydown', keyPress);
-                      }
-    }
+         const instance = basicLightbox.create(
+           `<img src="${e.target.dataset.source}" width="1280">`,
+           {
+             onShow: () =>
+             window.addEventListener('keydown', keyPress),
+           onClose: () =>
+           window.removeEventListener('keydown', keyPress)
+           });
+           instance.show();
+             function keyPress (e) {
+               if(e.code === 'Escape') {
+                 instance.close();
+             }
+           }
+      }
 }
  console.log(galleryItems);
